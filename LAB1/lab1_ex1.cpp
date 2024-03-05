@@ -4,10 +4,7 @@ int atoi_me(char s[])
 {
     int number=0 , i;
     for(i=0; i<strlen(s)-1;i++)
-        {
-            number = number*10+s[i]-'0';
-            //printf("%i\n",number);
-        }
+            number = number*10+s[i]-'0';        
     return number;
 }
 int main()
@@ -17,11 +14,8 @@ int main()
     int number=0 ;
     char s[10];
     while(fgets(s, sizeof(s), f))
-    {   
-        //printf("%s\t%i\n",s,strlen(s));   strlen(s) preia numarul de caractere + 1 
-        //printf("%i\n",atoi_me(s));
         number += atoi_me(s);
-    }
     printf("\n%i",number);
+    //daca pe ultimul rand al fisierului nu este un newline(ca pe site),programul nu afiseaza rezultatul dorit
     return 0;
 }

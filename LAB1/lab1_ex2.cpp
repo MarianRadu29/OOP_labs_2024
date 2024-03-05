@@ -1,55 +1,34 @@
 #include<stdio.h>
 #include<cstring>
 
-struct cuvant
-{
-    char c[100];
-    int size;
-};
+char C[100][100], s[256], aux[100], *p;
+int count, i, j;
 int main()
 {
-    cuvant C[100];
-    char s[256] , *p;
-    strcpy(s,"");
     printf("Enter a phrase: ");
-    scanf("%[^\n]s",s);//se citesc caractere pana la newline!!
+    scanf("%[^\n]s",s);//!!conditie de oprire la newline
     p = strtok(s," ");
-    //printf("%s\n",p);
-    int count = 0;
     while(p!=NULL)
     {   
-        strcpy(C[count].c,p);
-        C[count++].size = strlen(p);
+        strcpy(C[count++],p);
         p = strtok(NULL," ");
     }
-    int i , j;
     for(i=0;i<count;i++)
         for(j=i+1;j<=count;j++)
+            if(strlen(C[i])<strlen(C[j]))
             {
-                if(C[i].size<C[j].size)
-                {
-                    cuvant aux;
-                    aux = C[i];
-                    C[i] = C[j];
-                    C[j] = aux;
-                }
-                if(C[i].size == C[j].size)
-                    {
-                        int k=0;
-                        while(C[i].c[k] == C[j].c[k] && k<C[i].size)
-                            k++;
-                        if(C[i].c[k] < C[j].c[k] && k<C[i].size)
-                            {
-                                cuvant aux;
-                                aux = C[i];
-                                C[i] = C[j];
-                                C[j] = aux;
-                            }
-                    }
+                        strcpy(aux,C[j]);
+                        strcpy(C[j],C[i]);
+                        strcpy(C[i],aux);   
             }
+            else
+                if(strcmp(C[j],C[i])>0 && strlen(C[j])==strlen(C[i]))
+                    {
+                        strcpy(aux,C[j]);
+                        strcpy(C[j],C[i]);
+                        strcpy(C[i],aux);
+                    }
     for(int i = 0;i<=count;i++)
-        printf("%s\n",C[i].c);
-    
-    return 0;
-        
+        printf("%s\n",C[i]);
+    return 0;        
 }
