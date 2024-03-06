@@ -1,6 +1,6 @@
 #include"Movie.h"
 #include"MovieSeries.h"
-#include"GlobalFunctions.h"
+#include"Globals.h"
 using namespace std;
 
 int main() {
