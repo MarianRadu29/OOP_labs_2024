@@ -1,4 +1,4 @@
-#include "GlobalFunctions.h"
+#include "Globals.h"
 int movie_compare_name(Movie x, Movie y)
 {
 	return strcmp(x.GetName() , y.GetName());
