@@ -16,7 +16,7 @@ int byMath(student* M, student* N)
         else
             return -1;
 }
-int byEnglish(student* M, student* N)
+int byEnglish(student* M , student* N)
 {
     float m1, m2;
     m1 = M->GetEnglish();
