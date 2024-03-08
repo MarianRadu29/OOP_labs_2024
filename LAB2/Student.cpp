@@ -14,7 +14,6 @@ void student::SetMath(float x)
 }
 float student::GetMath()
 {
-  
     return this->grade_math;
 }
 void student::SetEnglish(float x)
