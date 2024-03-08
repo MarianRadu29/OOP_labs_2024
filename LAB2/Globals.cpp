@@ -38,7 +38,7 @@ int movie_compare_passed_years(Movie x, Movie y)
 	if (x.GetPassed_year() == y.GetPassed_year())
 		return 0;
 	else
-		if (x.GetPassed_year() < y.GetPassed_year())
+		if(x.GetPassed_year() < y.GetPassed_year())
 			return -1;
 		else
 			return 0;
