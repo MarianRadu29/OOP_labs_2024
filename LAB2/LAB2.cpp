@@ -2,7 +2,6 @@
 #include"FunctionGlobals.h"
 int main()
 {
-    
     cout << endl << "******************************************" << endl;
     cout << "NumberList" << endl;
     NumberList lista;
