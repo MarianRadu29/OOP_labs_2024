@@ -12,7 +12,7 @@ class NullValue: public JsonValue
     const char* valueNull = nullptr;
     public:
         ~NullValue(){delete valueNull; valueNull = nullptr;}
-        void print(std::ostream& out,int x) const {  out<<"null"; }
+        void print(std::ostream& out,int x) const override{  out<<"null"; }
 
 };
 class NumberValue: public JsonValue
@@ -21,7 +21,7 @@ class NumberValue: public JsonValue
     public:
         NumberValue(long long int x): valueNumber(x) {}
         ~NumberValue() = default;
-        void print(std::ostream& out,int x) const { out<<valueNumber; }
+        void print(std::ostream& out,int x) const override{ out<<valueNumber; }
 };
 class BoolValue: public JsonValue
 {   
@@ -29,7 +29,7 @@ class BoolValue: public JsonValue
     public:
         BoolValue(bool x): valueBool(x) {}
         ~BoolValue() = default;
-        void print(std::ostream& out,int x) const { out<<std::boolalpha<<valueBool;}
+        void print(std::ostream& out,int x) const override{ out<<std::boolalpha<<valueBool;}
 
 };
 class StringValue: public JsonValue
@@ -42,7 +42,7 @@ class StringValue: public JsonValue
                 strcpy(valueString,x);
         }
         ~StringValue() = default;
-        void print(std::ostream& out,int x) const { out<<'\"'<<valueString<<'\"'; }
+        void print(std::ostream& out,int x) const override{ out<<'\"'<<valueString<<'\"'; }
 };
 class ArrayValue:public JsonValue
 {
@@ -57,7 +57,7 @@ class ArrayValue:public JsonValue
             values[size++] = x;
         }
         ~ArrayValue() = default;
-        void print(std::ostream& out,int x) const
+        void print(std::ostream& out,int x) const override
         {
             out<<"[\n";
             for(int i =0;i<size-1;i++)
@@ -92,7 +92,7 @@ class ObjectValue:public JsonValue
             V[size++] = x;
         }
 
-        void print(std::ostream& out,int x) const
+        void print(std::ostream& out,int x=1) const override
         {       
             int i ;
             out<<'{'<<'\n';
@@ -113,12 +113,9 @@ class ObjectValue:public JsonValue
                 out<<'\t';
             out<<'}';
         }
-        operator unsigned() {  return size; }   
+        explicit operator unsigned() const {  return size; }   
         
 };
-#define _CRT_SECURE_NO_WARNINGS
-#include <iostream>
-
 int main() {
     auto array_numbers = new ArrayValue();
     array_numbers->add(new NumberValue(5));
@@ -143,6 +140,5 @@ int main() {
 
     std::cout << "Top node has " << (unsigned) *object << " subnodes\n";
 
-    object->print(std::cout,1);//am modificat functia de print ca sa mi afiseze corespunzator JSON-ul
+    object->print(std::cout);//am modificat functia de print ca sa mi afiseze corespunzator JSON-ul
 }
-
