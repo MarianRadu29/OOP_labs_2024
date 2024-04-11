@@ -4,7 +4,7 @@
 class JsonValue {
 public:
     virtual ~JsonValue() = 0;
-    virtual void print(std::ostream& out) const = 0;
+    virtual void print(std::ostream& out,int x) const = 0;
 };
 JsonValue::~JsonValue() = default;
 class NullValue: public JsonValue
@@ -12,7 +12,7 @@ class NullValue: public JsonValue
     const char* valueNull = nullptr;
     public:
         ~NullValue(){delete valueNull; valueNull = nullptr;}
-        void print(std::ostream& out) const { out<<"null"; }
+        void print(std::ostream& out,int x) const override{  out<<"null"; }
 
 };
 class NumberValue: public JsonValue
@@ -21,7 +21,7 @@ class NumberValue: public JsonValue
     public:
         NumberValue(long long int x): valueNumber(x) {}
         ~NumberValue() = default;
-        void print(std::ostream& out) const{ out<<valueNumber; }
+        void print(std::ostream& out,int x) const override{ out<<valueNumber; }
 };
 class BoolValue: public JsonValue
 {   
@@ -29,7 +29,7 @@ class BoolValue: public JsonValue
     public:
         BoolValue(bool x): valueBool(x) {}
         ~BoolValue() = default;
-        void print(std::ostream& out) const { out<<std::boolalpha<<valueBool; }
+        void print(std::ostream& out,int x) const override{ out<<std::boolalpha<<valueBool;}
 
 };
 class StringValue: public JsonValue
@@ -42,7 +42,7 @@ class StringValue: public JsonValue
                 strcpy(valueString,x);
         }
         ~StringValue() = default;
-        void print(std::ostream& out) const { out<<'\"'<<valueString<<'\"'; }
+        void print(std::ostream& out,int x) const override{ out<<'\"'<<valueString<<'\"'; }
 };
 class ArrayValue:public JsonValue
 {
@@ -57,15 +57,21 @@ class ArrayValue:public JsonValue
             values[size++] = x;
         }
         ~ArrayValue() = default;
-        void print(std::ostream& out) const
+        void print(std::ostream& out,int x) const override
         {
-            out<<'[';
+            out<<"[\n";
             for(int i =0;i<size-1;i++)
-                {
-                    values[i]->print(std::cout);
-                    out<<", ";
+                {   for(int j = 0;j<x;j++)
+                            out<<'\t';
+                    values[i]->print(std::cout,x+1);
+                    out<<", \n";
                 }
-            values[size-1]->print(std::cout);
+            for(int j = 0;j<x;j++)
+                out<<'\t';
+            values[size-1]->print(std::cout,x+1);
+            out<<'\n';
+            for(int j = 0;j<x-1;j++)
+                out<<'\t';
             out<<']';
         }
 };
@@ -86,21 +92,28 @@ class ObjectValue:public JsonValue
             V[size++] = x;
         }
 
-        void print(std::ostream& out) const
+        void print(std::ostream& out,int x=1) const override
         {       
             int i ;
-            out<<'{';
+            out<<'{'<<'\n';
             for(i = 0;i<size-1;i++)
-                {
+                {   
+                    for(int j = 0;j<x;j++)
+                        out<<'\t';
                     out<<'\"'<<name[i]<<"\": ";
-                    V[i]->print(std::cout);
-                    out<<", ";
+                    V[i]->print(std::cout,x+1);
+                    out<<", \n";
                 }
-            out<<'\"'<<name[i]<<"\": ";
-            V[i]->print(std::cout);
+            for(int j = 0;j<x;j++)
+                out<<'\t';
+            out<<"\""<<name[i]<<"\": ";
+            V[i]->print(std::cout,x+1);
+            out<<"\n";
+            for(int j = 0;j<x-1;j++)
+                out<<'\t';
             out<<'}';
         }
-        operator unsigned() {  return size; }   
+        explicit operator unsigned() const {  return size; }   
         
 };
 int main() {
@@ -108,23 +121,24 @@ int main() {
     array_numbers->add(new NumberValue(5));
     array_numbers->add(new NumberValue(10));
     array_numbers->add(new NumberValue(15));
+
     auto array_strings = new ArrayValue();
     array_strings->add(new StringValue("abc"));
     array_strings->add(new StringValue("def"));
     array_strings->add(new StringValue("ghi"));
+
     auto subobject = new ObjectValue();
     subobject->add("email", new StringValue("t@gmail.com"));
     subobject->add("name", new StringValue("T"));
     subobject->add("online", new BoolValue(true));
+
     auto object = new ObjectValue();
     object->add("n", new NullValue());
     object->add("array_numbers", array_numbers);
     object->add("array_strings", array_strings);
     object->add("info", subobject);
 
-    std::cout << "Top node has " << (unsigned) *object << " subnodes\n";//prin subnoduri m am referit la fii
-    
-    object->print(std::cout);
+    std::cout << "Top node has " << (unsigned) *object << " subnodes\n";
 
-    return 0;
+    object->print(std::cout);//am modificat functia de print ca sa mi afiseze corespunzator JSON-ul
 }
