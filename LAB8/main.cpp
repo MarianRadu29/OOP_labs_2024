@@ -4,9 +4,11 @@
 #include<vector>
 #include<queue>
 #include<fstream>
+#include<string>
 struct compare 
 {
-	bool operator() (std::pair<std::string, int> a, std::pair<std::string, int> b) {
+	bool operator() (std::pair<std::string, int> a, std::pair<std::string, int> b)
+    {
 		if (a.second < b.second)
 			return true;
         else
