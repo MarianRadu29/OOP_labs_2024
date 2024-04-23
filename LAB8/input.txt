@@ -1,5 +1,2 @@
-<<<<<<< HEAD
 I bought an apple. Then I eat an apple. Apple is my favorite.
-=======
-I bought an apple. Then I eat an apple. Apple is my favorite.
->>>>>>> 16daa2beecf01f2550025c0316b9dcd7c58833ec
+
