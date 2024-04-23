@@ -7,17 +7,18 @@
 #include<string>
 struct compare 
 {
-	bool operator() (std::pair<std::string, int> a, std::pair<std::string, int> b) {
+	bool operator() (std::pair<std::string, int> a, std::pair<std::string, int> b) 
+	{
 		if (a.second < b.second)
 			return true;
-        else
-		    if (a.second > b.second)
-			    return false;
-		    else
-                if (a.first < b.first)
-                    return false;
-                else
-                    return true;
+	        else
+			if (a.second > b.second)
+				    return false;
+			else
+		           	if (a.first < b.first)
+		                    return false;
+		                else
+		                    return true;
 	}
 };
 
@@ -60,7 +61,7 @@ int main()
         else
             MAP[*i] = 1;
     }
-    std::priority_queue< std::pair<std::string,int> ,std::vector<std::pair<std::string,int>>, compare> pq;//facem coada de tip pair ,elementele sunt memorate intr un deque de tip pair
+    std::priority_queue< std::pair<std::string,int> ,std::vector<std::pair<std::string,int>>, compare> pq;
     for(std::map<std::string, int>::iterator i = MAP.begin() ; i!=MAP.end();i++)
             pq.push({i->first , i->second});
     std::cout<<"------------------------"<<'\n';
