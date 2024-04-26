@@ -56,17 +56,6 @@ int main()
                 MAP[aux]++;
         }
     }
-<<<<<<< HEAD
-=======
-    std::map<std::string,int> MAP;
-    for(std::vector<std::string>::iterator i = words.begin() ; i!=words.end();i++)
-    {   
-        if(MAP.count(*i)>0)
-            MAP[*i]++;
-        else
-            MAP[*i] = 1;
-    }
->>>>>>> 99ebedbeffab8b7735c44f943e4091a12d5c1b7b
     std::priority_queue< std::pair<std::string,int> ,std::vector<std::pair<std::string,int>>, compare> pq;
     for(std::map<std::string, int>::iterator i = MAP.begin() ; i!=MAP.end();i++)
             pq.push({i->first , i->second});
