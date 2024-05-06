@@ -3,27 +3,27 @@
 
 class Compare
 {
-public:
-    virtual int CompareElements(void* e1, void* e2) = 0;
+    public:
+        virtual int CompareElements(void* e1, void* e2) = 0;
 };
 
 template<class T>
 class T_Compare :public Compare
 {
     public:
-    virtual int CompareElements(void* e1, void* e2) override
-    {
-        T* num1 = (T*)e1;
-        T* num2 = (T*)e2;
+        virtual int CompareElements(void* e1, void* e2) override
+        {
+            T* num1 = (T*)e1;
+            T* num2 = (T*)e2;
 
-        if(*num1 < *num2)
-            return -1;
-        else
-            if(*num1 > *num2)
-                return 1;
+            if(*num1 < *num2)
+                return -1;
             else
-                return 0;
-    }
+                if(*num1 > *num2)
+                    return 1;
+                else
+                    return 0;
+        }
 };
 
 template<class T>
@@ -66,7 +66,7 @@ public:
         List = other.List;
         Current = other.Current;
     }
-    bool operator!=(ArrayIterator<T> other)
+    bool operator!=(ArrayIterator<T>& other)
     {
         if (Current != other.Current)
             return true;
