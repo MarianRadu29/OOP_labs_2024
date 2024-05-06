@@ -12,9 +12,16 @@ class T_Compare :public Compare
 {
     virtual int CompareElements(void* e1, void* e2) override
     {
-        T* num1 = static_cast<T*>(e1);
-        T* num2 = static_cast<T*>(e2);
-        return (*num1 < *num2) ? -1 : ((*num1 > *num2) ? 1 : 0);
+        T* num1 = (T*)e1;
+        T* num2 = (T*)e2;
+
+        if(*num1 < *num2)
+            return -1;
+        else
+            if(*num1 > *num2)
+                return 1;
+            else
+                return 0;
     }
 };
 
@@ -207,7 +214,16 @@ public:
     }
     // functii de cautare - returneaza pozitia elementului sau -1 daca nu exista
     int BinarySearch(const T& elem) // cauta un element folosind binary search in Array
-    {
+    {   
+        bool sw = true;
+        for(unsigned i = 0 ;i<Size-1 &&sw==true;i++)
+            if(*List[i]>*List[i+1])
+                sw=false;
+        if(sw==false)
+            {
+                throw std::runtime_error("Eroare(BinarySearch(const T&)): Lista nu este ordonata crescator");
+                //return -1;
+            }
         int left = 0;
         int right = Size - 1;
         while (left <= right) {
@@ -226,7 +242,15 @@ public:
     }
     int BinarySearch(const T& elem, int(*compare)(const T&, const T&))//  cauta un element folosind binary search si o functie de comparatie
     {
-        
+        bool sw = true;
+        for(unsigned i = 0 ;i<Size-1 &&sw==true;i++)
+            if(*List[i]>*List[i+1])
+                sw=false;
+        if(sw==false)
+            {
+                throw std::runtime_error("Eroare(BinarySearch(const T&, int(*compare)(const T&, const T&))): Lista nu este ordonata crescator");
+                //return -1;
+            }
         int left = 0;
         int right = Size - 1;
         while (left <= right) {
@@ -243,7 +267,16 @@ public:
         return -1;
     }
     int BinarySearch(const T& elem, Compare* comparator)//  cauta un element folosind binary search si un comparator
-    {
+    {   
+        bool sw = true;
+        for(unsigned i = 0 ;i<Size-1 &&sw==true;i++)
+            if(*List[i]>*List[i+1])
+                sw=false;
+        if(sw==false)
+            {
+                throw std::runtime_error("Eroare(BinarySearch(const T&, Compare*))): Lista nu este ordonata crescator");
+                //return -1;
+            }
         int left = 0;
         int right = Size - 1;
         T aux = elem;
