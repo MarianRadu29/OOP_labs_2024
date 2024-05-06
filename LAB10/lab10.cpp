@@ -10,6 +10,7 @@ public:
 template<class T>
 class T_Compare :public Compare
 {
+    public:
     virtual int CompareElements(void* e1, void* e2) override
     {
         T* num1 = (T*)e1;
