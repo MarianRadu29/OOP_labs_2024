@@ -66,7 +66,7 @@ public:
         List = other.List;
         Current = other.Current;
     }
-    bool operator!=(ArrayIterator<T>& other)
+    bool operator!=(ArrayIterator<T> other)
     {
         if (Current != other.Current)
             return true;
@@ -112,23 +112,23 @@ public:
     T& operator[] (int index) // arunca exceptie daca index este out of range
     {
         if (index<0 || index>Size)//sau Capacity,depinde
-            throw std::runtime_error("Eroare(operator[]): Index-ul este out of range");
+            throw std::logic_error("Eroare(operator[]): Index-ul este out of range");
         return *List[index];
     }
     Array<T>& operator+=(const T& newElem) // adauga un element de tipul T la sfarsitul listei si returneaza this
     {//am scos "const" -ul de la tipul metodei,nu mergea (array +=x1) +=x2;
         if (Size == Capacity)//am adaugat o exceptie in plus
-            throw std::runtime_error("Eroare(operator+=): Array-ul este plin,nu se mai pot adauga elemente");
+            throw std::logic_error("Eroare(operator+=): Array-ul este plin,nu se mai pot adauga elemente");
         List[Size++] = new T(newElem);
         return *this;
     }
     const Array<T>& Insert(int index, const T& newElem) // adauga un element pe pozitia index, retureaza this. Daca index e invalid arunca o exceptie
     {
         if (index<0 || index>Size)
-            throw std::runtime_error("Eroare(Insert(int,const T &)): Index-ul este out of range");
+            throw std::logic_error("Eroare(Insert(int,const T &)): Index-ul este out of range");
 
         if (Size == Capacity)//daca array ul este plin ,nu mai putem adauga elemente ,orice index am primi
-                throw std::runtime_error("Eroare(Insert(int,const T &)): Array-ul este plin,nu se mai pot adauga elemente");
+                throw std::logic_error("Eroare(Insert(int,const T &)): Array-ul este plin,nu se mai pot adauga elemente");
         
         for (unsigned i = Size; i > index; i--)
         {
@@ -142,9 +142,9 @@ public:
     {
 
         if (index<0 || index>Size)
-            throw std::runtime_error("Eroare(Insert(int,const Array<T>)): Index-ul este out of range");
+            throw std::logic_error("Eroare(Insert(int,const Array<T>)): Index-ul este out of range");
         if (Size + otherArray.Size > Capacity)
-            throw std::runtime_error("Eroare(Insert(int,const Array<T>)): Nu se poate face inserarea unui nou Array in Array-ul curent(depasire Capacity)");
+            throw std::logic_error("Eroare(Insert(int,const Array<T>)): Nu se poate face inserarea unui nou Array in Array-ul curent(depasire Capacity)");
             
         for (unsigned i = Size + otherArray.Size - 1; i > index + otherArray.Size-1; i--)//ex din this.list = {1,2,3,-,-,-,-},index=1  otherarray={4,5,6} this.list va fi {1,-,-,-,2,3}
             List[i] = List[i - otherArray.Size];
@@ -159,7 +159,7 @@ public:
     const Array<T>& Delete(int index) // sterge un element de pe pozitia index, returneaza this. Daca index e invalid arunca o exceptie
     {
         if (index<0 || index>Size)
-            throw std::runtime_error("Eroare(Delete(int)): Index-ul este out of range");
+            throw std::logic_error("Eroare(Delete(int)): Index-ul este out of range");
         for (unsigned i = index; i < Size - 1; i++)
             List[i] = List[i + 1];
         Size--;
@@ -222,7 +222,7 @@ public:
                 sw=false;
         if(sw==false)
             {
-                throw std::runtime_error("Eroare(BinarySearch(const T&)): Lista nu este ordonata crescator");
+                throw std::logic_error("Eroare(BinarySearch(const T&)): Lista nu este ordonata crescator");
                 //return -1;
             }
         int left = 0;
@@ -249,7 +249,7 @@ public:
                 sw=false;
         if(sw==false)
             {
-                throw std::runtime_error("Eroare(BinarySearch(const T&, int(*compare)(const T&, const T&))): Lista nu este ordonata crescator");
+                throw std::logic_error("Eroare(BinarySearch(const T&, int(*compare)(const T&, const T&))): Lista nu este ordonata crescator");
                 //return -1;
             }
         int left = 0;
@@ -275,7 +275,7 @@ public:
                 sw=false;
         if(sw==false)
             {
-                throw std::runtime_error("Eroare(BinarySearch(const T&, Compare*))): Lista nu este ordonata crescator");
+                throw std::logic_error("Eroare(BinarySearch(const T&, Compare*))): Lista nu este ordonata crescator");
                 //return -1;
             }
         int left = 0;
@@ -324,11 +324,11 @@ public:
 
     ArrayIterator<T> GetBeginIterator()
     {
-        return { List,0 };
+        return ArrayIterator<T>(List,0);
     }
     ArrayIterator<T> GetEndIterator()
     {
-        return { List,Size };
+        return ArrayIterator<T>(List,Size);
     }
     /////////////////////////////////////////
     //pentru foreach
@@ -369,11 +369,11 @@ int main()
     int y2 = 2;
     int y3 = 3;
     ((array1 += y1) += y2) +=y3;
-    try 
+    try //am folosit la toate exceptiile logic_error deoarece majoritatea aveau exceptii out_of_range sau invalid_argument(vectorul/lista nu este sortata)
     {
         array.Insert(0, array1);
     }
-    catch (std::runtime_error& e)//daca la "array" schimbam la constructor o valoare mai mare ca 6 merge
+    catch (std::exception& e)//daca la "array" schimbam la constructor o valoare mai mare ca 6 merge
     {
         std::cerr <<'\n'<< e.what() << "\n\n";
     }
