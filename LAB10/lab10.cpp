@@ -3,27 +3,27 @@
 
 class Compare
 {
-    public:
-        virtual int CompareElements(void* e1, void* e2) = 0;
+public:
+    virtual int CompareElements(void* e1, void* e2) = 0;
 };
 
 template<class T>
 class T_Compare :public Compare
 {
-    public:
-        virtual int CompareElements(void* e1, void* e2) override
-        {
-            T* num1 = (T*)e1;
-            T* num2 = (T*)e2;
+public:
+    virtual int CompareElements(void* e1, void* e2) override
+    {
+        T* num1 = (T*)e1;
+        T* num2 = (T*)e2;
 
-            if(*num1 < *num2)
-                return -1;
+        if (*num1 < *num2)
+            return -1;
+        else
+            if (*num1 > *num2)
+                return 1;
             else
-                if(*num1 > *num2)
-                    return 1;
-                else
-                    return 0;
-        }
+                return 0;
+    }
 };
 
 template<class T>
@@ -97,7 +97,7 @@ public:
         Capacity = 0;
         Size = 0;
     }
-    Array(int capacity) :Capacity(capacity) , Size(0)// Lista e alocata cu 'capacity' elemente
+    Array(int capacity) :Capacity(capacity), Size(0)// Lista e alocata cu 'capacity' elemente
     {
         List = new T * [capacity];
     }
@@ -128,8 +128,8 @@ public:
             throw std::logic_error("Eroare(Insert(int,const T &)): Index-ul este out of range");
 
         if (Size == Capacity)//daca array ul este plin ,nu mai putem adauga elemente ,orice index am primi
-                throw std::logic_error("Eroare(Insert(int,const T &)): Array-ul este plin,nu se mai pot adauga elemente");
-        
+            throw std::logic_error("Eroare(Insert(int,const T &)): Array-ul este plin,nu se mai pot adauga elemente");
+
         for (unsigned i = Size; i > index; i--)
         {
             List[i] = List[i - 1];
@@ -145,8 +145,8 @@ public:
             throw std::logic_error("Eroare(Insert(int,const Array<T>)): Index-ul este out of range");
         if (Size + otherArray.Size > Capacity)
             throw std::logic_error("Eroare(Insert(int,const Array<T>)): Nu se poate face inserarea unui nou Array in Array-ul curent(depasire Capacity)");
-            
-        for (unsigned i = Size + otherArray.Size - 1; i > index + otherArray.Size-1; i--)//ex din this.list = {1,2,3,-,-,-,-},index=1  otherarray={4,5,6} this.list va fi {1,-,-,-,2,3}
+
+        for (unsigned i = Size + otherArray.Size - 1; i > index + otherArray.Size - 1; i--)//ex din this.list = {1,2,3,-,-,-,-},index=1  otherarray={4,5,6} this.list va fi {1,-,-,-,2,3}
             List[i] = List[i - otherArray.Size];
 
         for (unsigned i = 0; i < otherArray.Size; i++)
@@ -215,52 +215,52 @@ public:
     }
     // functii de cautare - returneaza pozitia elementului sau -1 daca nu exista
     int BinarySearch(const T& elem) // cauta un element folosind binary search in Array
-    {   
+    {
         bool sw = true;
-        for(unsigned i = 0 ;i<Size-1 &&sw==true;i++)
-            if(*List[i]>*List[i+1])
-                sw=false;
-        if(sw==false)
-            {
-                throw std::logic_error("Eroare(BinarySearch(const T&)): Lista nu este ordonata crescator");
-                //return -1;
-            }
+        for (unsigned i = 0; i < Size - 1 && sw == true; i++)
+            if (*List[i] > *List[i + 1])
+                sw = false;
+        if (sw == false)
+        {
+            throw std::logic_error("Eroare(BinarySearch(const T&)): Lista nu este ordonata crescator");
+            //return -1;
+        }
         int left = 0;
         int right = Size - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
 
             if (*List[mid] == elem)
-                return mid; 
-            else 
+                return mid;
+            else
                 if (*List[mid] < elem)
                     left = mid + 1;
                 else
                     right = mid - 1;
-       
+
         }
         return -1;
     }
     int BinarySearch(const T& elem, int(*compare)(const T&, const T&))//  cauta un element folosind binary search si o functie de comparatie
     {
         bool sw = true;
-        for(unsigned i = 0 ;i<Size-1 &&sw==true;i++)
-            if(*List[i]>*List[i+1])
-                sw=false;
-        if(sw==false)
-            {
-                throw std::logic_error("Eroare(BinarySearch(const T&, int(*compare)(const T&, const T&))): Lista nu este ordonata crescator");
-                //return -1;
-            }
+        for (unsigned i = 0; i < Size - 1 && sw == true; i++)
+            if (*List[i] > *List[i + 1])
+                sw = false;
+        if (sw == false)
+        {
+            throw std::logic_error("Eroare(BinarySearch(const T&, int(*compare)(const T&, const T&))): Lista nu este ordonata crescator");
+            //return -1;
+        }
         int left = 0;
         int right = Size - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
 
-            if (compare(*List[mid],elem)==0)
+            if (compare(*List[mid], elem) == 0)
                 return mid;
             else
-                if (compare(*List[mid],elem)==-1)
+                if (compare(*List[mid], elem) == -1)
                     left = mid + 1;
                 else
                     right = mid - 1;
@@ -268,16 +268,16 @@ public:
         return -1;
     }
     int BinarySearch(const T& elem, Compare* comparator)//  cauta un element folosind binary search si un comparator
-    {   
+    {
         bool sw = true;
-        for(unsigned i = 0 ;i<Size-1 &&sw==true;i++)
-            if(*List[i]>*List[i+1])
-                sw=false;
-        if(sw==false)
-            {
-                throw std::logic_error("Eroare(BinarySearch(const T&, Compare*))): Lista nu este ordonata crescator");
-                //return -1;
-            }
+        for (unsigned i = 0; i < Size - 1 && sw == true; i++)
+            if (*List[i] > *List[i + 1])
+                sw = false;
+        if (sw == false)
+        {
+            throw std::logic_error("Eroare(BinarySearch(const T&, Compare*))): Lista nu este ordonata crescator");
+            //return -1;
+        }
         int left = 0;
         int right = Size - 1;
         T aux = elem;
@@ -287,7 +287,7 @@ public:
 
             if (comparator->CompareElements(List[mid], ptr_elem) == 0)
                 return mid;
-            else 
+            else
                 if (comparator->CompareElements(List[mid], ptr_elem) == -1)
                     left = mid + 1;
                 else
@@ -324,16 +324,16 @@ public:
 
     ArrayIterator<T> GetBeginIterator()
     {
-        return ArrayIterator<T>(List,0);
+        return ArrayIterator<T>(List, 0);
     }
     ArrayIterator<T> GetEndIterator()
     {
-        return ArrayIterator<T>(List,Size);
+        return ArrayIterator<T>(List, Size);
     }
     /////////////////////////////////////////
     //pentru foreach
     ArrayIterator<T>& begin()
-    {   
+    {
         ArrayIterator<T>* a = new ArrayIterator<T>(List, 0);
         return *a;
     }
@@ -358,7 +358,7 @@ int main()
     int x1 = 1;
     int x2 = 2;
     int x3 = 3;
-   
+
     (array += x2) += x3;
     array.Insert(0, x1);
     std::cout << "array: ";
@@ -368,19 +368,19 @@ int main()
     int y1 = 1;
     int y2 = 2;
     int y3 = 3;
-    ((array1 += y1) += y2) +=y3;
+    ((array1 += y1) += y2) += y3;
     try //am folosit la toate exceptiile logic_error deoarece majoritatea aveau exceptii out_of_range sau invalid_argument(vectorul/lista nu este sortata)
     {
         array.Insert(0, array1);
     }
-    catch (std::exception& e)//daca la "array" schimbam la constructor o valoare mai mare ca 6 merge
+    catch (std::exception& e)//daca la "array" schimbam valoarea la apelul constructorului cu una >=6 nu se arunca exceptie
     {
-        std::cerr <<'\n'<< e.what() << "\n\n";
+        std::cout << '\n' << e.what() << "\n\n";
     }
     std::cout << "array: ";
     array.Print();
     std::cout << "---------------------------------------------------------\n";
-    std::cout <<"array[0] = "<< array[0] << '\n';
+    std::cout << "array[0] = " << array[0] << '\n';
     std::cout << "---------------------------------------------------------\n";
 
     array.Delete(2);
@@ -390,32 +390,32 @@ int main()
 
     Array<int> ARRAY(10);
     ((((ARRAY += 10) += 2) += 7) += 9) += 5;
-   // std::cout << ARRAY.GetSize() << '\n';
+    // std::cout << ARRAY.GetSize() << '\n';
 
     ARRAY.Sort(new T_Compare<int>);
     std::cout << "ARRAY: ";
     ARRAY.Print();
-    std::cout << "---------------------------------------------------------\n"; 
+    std::cout << "---------------------------------------------------------\n";
 
-        //la binary search trebuie sa fie sortat array ul;
-     std::cout <<"Pozitia in care se afla 2 in ARRAY este " << ARRAY.BinarySearch(2, new T_Compare<int>) << '\n';
+    //la binary search trebuie sa fie sortat array ul;
+    std::cout << "Pozitia in care se afla 2 in ARRAY este " << ARRAY.BinarySearch(2, new T_Compare<int>) << '\n';
     std::cout << "Pozitia in care se afla 5 in ARRAY este " << ARRAY.Find(5, new T_Compare<int>) << '\n';
     std::cout << "ARRAY: ";
     ARRAY.Print();
     std::cout << "---------------------------------------------------------\n";
     ArrayIterator<int> it = ARRAY.GetBeginIterator();
-   // std::cout << *it.GetElement();
+    // std::cout << *it.GetElement();
     std::cout << "ARRAY(parcurgere iterator): ";
-   for(;it!=ARRAY.GetEndIterator();++it)
-       std::cout<< *it.GetElement()<<' ';
-   std::cout << "\n---------------------------------------------------------\n";
-   //foreach
-   for (auto &it : ARRAY)
-       std::cout << it++ << ' ';
-   std::cout << '\n';
-   for (auto it : ARRAY)
-       std::cout << it << ' ';
-   std::cout << "\n---------------------------------------------------------\n";
+    for (; it != ARRAY.GetEndIterator(); ++it)
+        std::cout << *it.GetElement() << ' ';
+    std::cout << "\n---------------------------------------------------------\n";
+    //foreach
+    for (auto& it : ARRAY)
+        std::cout << it++ << ' ';
+    std::cout << '\n';
+    for (auto it : ARRAY)
+        std::cout << it << ' ';
+    std::cout << "\n---------------------------------------------------------\n";
 
 
     return 0;
