@@ -369,7 +369,9 @@ int main()
     int y2 = 2;
     int y3 = 3;
     ((array1 += y1) += y2) += y3;
-    try //am folosit la toate exceptiile logic_error deoarece majoritatea aveau exceptii out_of_range sau invalid_argument(vectorul/lista nu este sortata)
+    
+    //mergea facut si cu " throw std::logic_error("mesaj");" "cand aruncam exceptia si pus la catch "std::logic_error& e"
+    try
     {
         array.Insert(0, array1);
     }
