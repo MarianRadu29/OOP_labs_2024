@@ -390,7 +390,7 @@ int main()
     {
         array.Insert(0, array1);
     }
-    catch (MyException& e)//daca la "array" schimbam valoarea la apelul constructorului cu una >=6 nu se arunca exceptie
+    catch (std::exception& e)//daca la "array" schimbam valoarea la apelul constructorului cu una >=6 nu se arunca exceptie
     {
         std::cout << e.what() << '\n';
     }
