@@ -1,10 +1,20 @@
 #include<iostream>
-#include<stdexcept>
-
+#include<exception>
 class Compare
 {
 public:
     virtual int CompareElements(void* e1, void* e2) = 0;
+};
+
+class MyException : public std::exception
+{   
+    const char* str_exception;
+public:
+    virtual const char* what() const throw()
+    {
+        return str_exception;
+    }
+    MyException(const char* e) :str_exception(e) {}
 };
 
 template<class T>
@@ -65,6 +75,7 @@ public:
     {
         List = other.List;
         Current = other.Current;
+        return true;
     }
     bool operator!=(ArrayIterator<T> other)
     {
@@ -112,23 +123,23 @@ public:
     T& operator[] (int index) // arunca exceptie daca index este out of range
     {
         if (index<0 || index>Size)//sau Capacity,depinde
-            throw "Eroare(operator[]): Index-ul este out of range";
+            throw MyException("Eroare(operator[]): Index-ul este out of range");
         return *List[index];
     }
     Array<T>& operator+=(const T& newElem) // adauga un element de tipul T la sfarsitul listei si returneaza this
-    {//am scos "const" -ul de la tipul metodei,nu mergea (array +=x1) +=x2;
+    {//am scos "const" -ul de la tipul metodei,nu functiona (array +=x1) +=x2;
         if (Size == Capacity)//am adaugat o exceptie in plus
-            throw "Eroare(operator+=): Array-ul este plin,nu se mai pot adauga elemente";
+            throw MyException("Eroare(operator+=): Array-ul este plin,nu se mai pot adauga elemente");
         List[Size++] = new T(newElem);
         return *this;
     }
     const Array<T>& Insert(int index, const T& newElem) // adauga un element pe pozitia index, retureaza this. Daca index e invalid arunca o exceptie
     {
         if (index<0 || index>Size)
-            throw "Eroare(Insert(int,const T &)): Index-ul este out of range";
+            throw MyException("Eroare(Insert(int,const T &)): Index-ul este out of range");
 
         if (Size == Capacity)//daca array ul este plin ,nu mai putem adauga elemente ,orice index am primi
-            throw "Eroare(Insert(int,const T &)): Array-ul este plin,nu se mai pot adauga elemente";
+            throw MyException("Eroare(Insert(int,const T &)): Array-ul este plin,nu se mai pot adauga elemente");
 
         for (unsigned i = Size; i > index; i--)
         {
@@ -142,9 +153,9 @@ public:
     {
 
         if (index<0 || index>Size)
-            throw "Eroare(Insert(int,const Array<T>)): Index-ul este out of range";
+            throw MyException("Eroare(Insert(int,const Array<T>)): Index-ul este out of range");
         if (Size + otherArray.Size > Capacity)
-            throw "Eroare(Insert(int,const Array<T>)): Nu se poate face inserarea unui nou Array in Array-ul curent(depasire Capacity)";
+            throw MyException("Eroare(Insert(int,const Array<T>)): Nu se poate face inserarea unui nou Array in Array-ul curent(depasire Capacity)");
 
         for (unsigned i = Size + otherArray.Size - 1; i > index + otherArray.Size - 1; i--)//ex din this.list = {1,2,3,-,-,-,-},index=1  otherarray={4,5,6} this.list va fi {1,-,-,-,2,3}
             List[i] = List[i - otherArray.Size];
@@ -159,7 +170,7 @@ public:
     const Array<T>& Delete(int index) // sterge un element de pe pozitia index, returneaza this. Daca index e invalid arunca o exceptie
     {
         if (index<0 || index>Size)
-            throw "Eroare(Delete(int)): Index-ul este out of range";
+            throw MyException("Eroare(Delete(int)): Index-ul este out of range");
         for (unsigned i = index; i < Size - 1; i++)
             List[i] = List[i + 1];
         Size--;
@@ -190,6 +201,8 @@ public:
         return true;
     }
     */
+
+
     void Sort() // sorteaza folosind comparatia intre elementele din T
     {
         for (unsigned i = 0; i < Size - 1; i++)
@@ -213,6 +226,8 @@ public:
                 if (comparator->CompareElements(List[i], List[j]) > 0)
                     std::swap(List[i], List[j]);
     }
+
+
     // functii de cautare - returneaza pozitia elementului sau -1 daca nu exista
     int BinarySearch(const T& elem) // cauta un element folosind binary search in Array
     {
@@ -222,7 +237,7 @@ public:
                 sw = false;
         if (sw == false)
         {
-            throw "Eroare(BinarySearch(const T&)): Lista nu este ordonata crescator";
+            throw MyException("Eroare(BinarySearch(const T&)): Lista nu este ordonata crescator");
             //return -1;
         }
         int left = 0;
@@ -249,7 +264,7 @@ public:
                 sw = false;
         if (sw == false)
         {
-            throw "Eroare(BinarySearch(const T&, int(*compare)(const T&, const T&))): Lista nu este ordonata crescator";
+            throw MyException("Eroare(BinarySearch(const T&, int(*compare)(const T&, const T&))): Lista nu este ordonata crescator");
             //return -1;
         }
         int left = 0;
@@ -275,7 +290,7 @@ public:
                 sw = false;
         if (sw == false)
         {
-            throw "Eroare(BinarySearch(const T&, Compare*))): Lista nu este ordonata crescator";
+            throw MyException("Eroare(BinarySearch(const T&, Compare*))): Lista nu este ordonata crescator");
             //return -1;
         }
         int left = 0;
@@ -296,6 +311,7 @@ public:
         }
         return -1;
     }
+
     int Find(const T& elem) // cauta un element in Array
     {
         for (unsigned i = 0; i < Size; i++)
@@ -319,6 +335,7 @@ public:
                 return i;
         return -1;
     }
+
     int GetSize() const { return Size; }
     int GetCapacity() const { return Capacity; }
 
@@ -330,7 +347,7 @@ public:
     {
         return ArrayIterator<T>(List, Size);
     }
-    /////////////////////////////////////////
+
     //pentru foreach
     ArrayIterator<T>& begin()
     {
@@ -369,16 +386,15 @@ int main()
     int y2 = 2;
     int y3 = 3;
     ((array1 += y1) += y2) += y3;
-    
-    //mergea facut si cu " throw std::logic_error("mesaj");" "cand aruncam exceptia si pus la catch "std::logic_error& e"
     try
     {
         array.Insert(0, array1);
     }
-    catch (const char* mesaj)//daca la "array" schimbam valoarea la apelul constructorului cu una >=6 nu se arunca exceptie
+    catch (MyException& e)//daca la "array" schimbam valoarea la apelul constructorului cu una >=6 nu se arunca exceptie
     {
-        std::cout << '\n' << mesaj << "\n\n";
+        std::cout << e.what() << '\n';
     }
+    std::cout << "---------------------------------------------------------\n";
     std::cout << "array: ";
     array.Print();
     std::cout << "---------------------------------------------------------\n";
@@ -401,7 +417,7 @@ int main()
 
     //la binary search trebuie sa fie sortat array ul;
     std::cout << "Pozitia in care se afla 2 in ARRAY este " << ARRAY.BinarySearch(2, new T_Compare<int>) << '\n';
-    std::cout << "Pozitia in care se afla 5 in ARRAY este " << ARRAY.Find(5, new T_Compare<int>) << '\n';
+    std::cout << "Pozitia in care se afla 5 in ARRAY este " << ARRAY.Find(5, comparare) << '\n';
     std::cout << "ARRAY: ";
     ARRAY.Print();
     std::cout << "---------------------------------------------------------\n";
