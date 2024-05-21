@@ -21,7 +21,6 @@ struct compare
                     return true;
     }
 };
-
 int main()
 {
     std::ifstream f("input.txt");
