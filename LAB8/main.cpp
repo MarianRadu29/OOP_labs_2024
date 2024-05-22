@@ -1,5 +1,4 @@
 #include<iostream>
-#include<cstring>
 #include<map>
 #include<vector>
 #include<queue>
@@ -21,7 +20,6 @@ struct compare
                     return true;
     }
 };
-
 int main()
 {
     std::ifstream f("input.txt");
